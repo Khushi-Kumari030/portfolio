@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { siteConfig } from "@/data/siteConfig";
 import { Mail, Github, Linkedin, Copy, Check, ArrowUpRight, Send } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function ContactCTA() {
   const [copied, setCopied] = useState(false);
@@ -18,13 +19,19 @@ export default function ContactCTA() {
       {/* Background Central Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-[#FF6B35]/8 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-8">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-8"
+      >
         
         {/* Badge */}
         <div className="inline-flex items-center gap-2 mb-2">
           <span className="w-2 h-2 rounded-full bg-[#FF6B35]"></span>
           <span className="text-xs font-mono text-[#F29B70] tracking-widest uppercase font-medium">
-            CONTACT &amp; CONNECT
+            CONTACT
           </span>
         </div>
 
@@ -45,11 +52,10 @@ export default function ContactCTA() {
           {/* Email Button */}
           <a
             href={`mailto:${siteConfig.links.email}`}
-            className="group relative inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#FF6B35] text-[#0B0B0A] font-sans font-semibold text-sm hover:bg-[#F29B70] transition-all duration-300 shadow-[0_0_25px_rgba(255,107,53,0.35)] active:scale-95"
+            className="group relative inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#FF6B35] text-[#0B0B0A] font-sans font-semibold text-sm hover:bg-[#F29B70] transition-all duration-300 shadow-[0_0_25px_rgba(255,107,53,0.35)] hover:shadow-[0_0_30px_rgba(255,107,53,0.5)] active:scale-95"
           >
             <Mail className="w-4 h-4" />
             <span>Email Me</span>
-            <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </a>
 
           {/* LinkedIn Button */}
@@ -98,8 +104,9 @@ export default function ContactCTA() {
           </button>
         </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 }
+
 

@@ -2,7 +2,8 @@
 
 import React from "react";
 import { projectsData } from "@/data/projects";
-import { Github, ArrowUpRight, CheckCircle2 } from "lucide-react";
+import { Github } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function ProjectsShowcase() {
   return (
@@ -10,7 +11,13 @@ export default function ProjectsShowcase() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4"
+        >
           <div>
             <div className="inline-flex items-center gap-2 mb-3">
               <span className="w-2 h-2 rounded-full bg-[#FF6B35]"></span>
@@ -23,14 +30,18 @@ export default function ProjectsShowcase() {
           <p className="text-sm font-sans text-[#A8A098] max-w-md leading-relaxed">
             Machine learning systems, explainable AI architectures, deep vision models, and scalable software pipelines.
           </p>
-        </div>
+        </motion.div>
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projectsData.map((project) => (
-            <div
+          {projectsData.map((project, index) => (
+            <motion.div
               key={project.id}
-              className="group relative p-7 sm:p-9 rounded-2xl bg-[#151412] border border-[#292521] hover:border-[#FF6B35]/70 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-[0_0_30px_rgba(255,107,53,0.14)] hover:-translate-y-1"
+              initial={{ opacity: 0, y: 25, scale: 0.98 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
+              className="group relative p-7 sm:p-9 rounded-2xl bg-[#151412] border border-[#292521] hover:border-[#FF6B35]/70 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-[0_0_30px_rgba(255,107,53,0.14)] hover:-translate-y-1.5"
             >
               {/* Subtle orange accent glow on hover */}
               <div className="absolute top-0 right-0 w-36 h-36 bg-[#FF6B35]/5 rounded-full blur-2xl group-hover:bg-[#FF6B35]/15 transition-colors pointer-events-none" />
@@ -90,7 +101,7 @@ export default function ProjectsShowcase() {
                   {project.technologies.slice(0, 5).map((tech) => (
                     <span
                       key={tech}
-                      className="px-2.5 py-0.5 rounded bg-[#0B0B0A] text-[#F5EFE6]/80 text-[11px] font-mono border border-[#292521]"
+                      className="px-2.5 py-0.5 rounded bg-[#0B0B0A] text-[#F5EFE6]/80 text-[11px] font-mono border border-[#292521] group-hover:border-[#FF6B35]/30 group-hover:text-[#F5EFE6] transition-colors"
                     >
                       {tech}
                     </span>
@@ -105,12 +116,12 @@ export default function ProjectsShowcase() {
                     className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-[#F5EFE6] hover:text-[#FF6B35] transition-colors shrink-0 group/link"
                   >
                     <Github className="w-4 h-4 text-[#FF6B35]" />
-                    <span>GitHub ↗</span>
+                    <span className="group-hover/link:translate-x-0.5 transition-transform inline-block">GitHub ↗</span>
                   </a>
                 )}
               </div>
 
-            </div>
+            </motion.div>
           ))}
         </div>
 
@@ -118,4 +129,5 @@ export default function ProjectsShowcase() {
     </section>
   );
 }
+
 

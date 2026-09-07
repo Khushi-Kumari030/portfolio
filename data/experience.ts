@@ -13,6 +13,25 @@ export interface ExperienceItem {
 
 export const experiencesData: ExperienceItem[] = [
   {
+    id: "blackrock-aiml-intern",
+    role: "AI/ML Intern",
+    organization: "BlackRock",
+    location: "Summer Internship",
+    period: "Upcoming",
+    type: "Internship",
+    description: "Upcoming AI/ML Internship — I will be joining BlackRock for an upcoming AI/ML internship during the summer vacation.",
+    bullets: [
+      "Joining BlackRock for an AI/ML Internship during the upcoming summer vacation.",
+      "Will work on applying machine learning algorithms and quantitative AI systems to high-impact financial data."
+    ],
+    metrics: [
+      { label: "Role", value: "AI/ML Intern" },
+      { label: "Company", value: "BlackRock" },
+      { label: "Status", value: "Upcoming" }
+    ],
+    skills: ["Machine Learning", "Artificial Intelligence", "Quantitative Analysis", "Python"]
+  },
+  {
     id: "iit-roorkee-cv",
     role: "Computer Vision Research Intern",
     organization: "Department of Civil Engineering, IIT Roorkee",

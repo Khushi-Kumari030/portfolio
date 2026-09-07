@@ -50,7 +50,7 @@ export default function HollowCube() {
     // ==========================================
     // 1. Fixed Anchor Group (Stays stationary at fixed world position)
     const fixedAnchorGroup = new THREE.Group();
-    // Tilt the fixed anchor slightly so the lateral rotation swings diagonally/laterally in 3D
+    // Tilt the fixed anchor slightly so the lateral rotation swings diagonally/laterally in 3D perspective
     fixedAnchorGroup.position.set(0, -0.4, 0);
     fixedAnchorGroup.rotation.z = Math.PI * 0.12;
     fixedAnchorGroup.rotation.x = Math.PI * 0.15;
@@ -139,24 +139,13 @@ export default function HollowCube() {
       lateralPivotGroup.add(sphere);
     });
 
-    // Orbital Ring around the fixed pivot anchor
-    const ringGeometry = new THREE.TorusGeometry(3.2, 0.008, 16, 100);
-    const ringMaterial = new THREE.MeshBasicMaterial({
-      color: 0xff6b35,
-      transparent: true,
-      opacity: 0.18,
-    });
-    const orbitRing = new THREE.Mesh(ringGeometry, ringMaterial);
-    orbitRing.rotation.x = Math.PI / 2.2;
-    fixedAnchorGroup.add(orbitRing);
-
-    // Orbiting Halo Particles around the anchor
-    const particleCount = 80;
+    // Subtle Ambient Dust Particles around the cube
+    const particleCount = 60;
     const particleGeometry = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(particleCount * 3);
 
     for (let i = 0; i < particleCount; i++) {
-      const radius = 2.0 + Math.random() * 2.5;
+      const radius = 2.0 + Math.random() * 2.2;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
 
@@ -168,15 +157,15 @@ export default function HollowCube() {
     particleGeometry.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
     const particleMat = new THREE.PointsMaterial({
       color: 0xff6b35,
-      size: 0.035,
+      size: 0.03,
       transparent: true,
-      opacity: 0.55,
+      opacity: 0.45,
       blending: THREE.AdditiveBlending
     });
     const particleCloud = new THREE.Points(particleGeometry, particleMat);
     scene.add(particleCloud);
 
-    // Mouse Parallax (subtle, smoothly applied to scene camera without disturbing the anchored vertex)
+    // Mouse Parallax (subtle position translation on camera, strictly without rotating or tilting the fixed pivot)
     let mouseX = 0;
     let mouseY = 0;
     let targetMouseX = 0;
@@ -186,8 +175,8 @@ export default function HollowCube() {
       const rect = container.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
-      targetMouseX = x * 0.4;
-      targetMouseY = y * 0.4;
+      targetMouseX = x * 0.3;
+      targetMouseY = y * 0.3;
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -211,23 +200,23 @@ export default function HollowCube() {
     const animate = () => {
       const delta = clock.getDelta();
 
-      // Smooth Camera Parallax (dampened)
+      // Smooth Camera Parallax (subtle linear translation, keeping lookAt centered on stationary pivot)
       mouseX += (targetMouseX - mouseX) * 0.04;
       mouseY += (targetMouseY - mouseY) * 0.04;
-      camera.position.x = mouseX * 1.5;
-      camera.position.y = 1.2 + mouseY * -1.2;
+      camera.position.x = mouseX * 1.2;
+      camera.position.y = 1.2 + mouseY * -0.8;
       camera.lookAt(0, -0.2, 0);
 
       // ==========================================
       // CONTROLLED LATERAL ROTATION AROUND FIXED VERTEX
       // The vertex at (0,0,0) stays anchored in space!
-      // The entire cube swings laterally around it.
+      // Smooth continuous lateral rotation around Y-axis.
       // ==========================================
-      const rotationSpeed = isHovered ? 0.45 : 0.32;
+      const rotationSpeed = isHovered ? 0.65 : 0.48;
       lateralPivotGroup.rotation.y += delta * rotationSpeed;
 
-      // Slow orbital drift of background particles
-      particleCloud.rotation.y += delta * 0.05;
+      // Slow ambient drift of particles
+      particleCloud.rotation.y += delta * 0.04;
 
       // Hover glow enhancement
       lineMaterial.opacity = isHovered ? 1.0 : 0.9;
@@ -251,7 +240,6 @@ export default function HollowCube() {
       innerEdges.dispose();
       normalSphereGeo.dispose();
       anchorSphereGeo.dispose();
-      ringGeometry.dispose();
       particleGeometry.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
@@ -266,17 +254,10 @@ export default function HollowCube() {
       onMouseLeave={() => setIsHovered(false)}
       className="relative w-full h-[320px] sm:h-[400px] lg:h-[480px] flex items-center justify-center cursor-default select-none"
     >
-      {/* Soft Bottom Orange Ambient Spotlight */}
+      {/* Soft Stationary Bottom Orange Ambient Spotlight */}
       <div className="absolute bottom-6 w-36 h-10 bg-[#FF6B35]/20 blur-2xl rounded-full pointer-events-none" />
-      
-      {/* Minimal Tech Coordinates Overlay */}
-      <div className="absolute bottom-3 right-3 text-[10px] font-mono text-[#A8A098]/50 tracking-wider hidden sm:block pointer-events-none">
-        <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B35] animate-pulse"></span>
-          <span>PINNED VERTEX PIVOT</span>
-        </div>
-      </div>
     </div>
   );
 }
+
 

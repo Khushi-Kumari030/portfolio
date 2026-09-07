@@ -4,6 +4,7 @@ import React from "react";
 import { siteConfig } from "@/data/siteConfig";
 import HollowCube from "./HollowCube";
 import { ArrowRight, FileText, Github, Linkedin, BrainCircuit, Terminal, ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface HeroProps {
   onOpenResume?: () => void;
@@ -30,7 +31,12 @@ export default function Hero({ onOpenResume }: HeroProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
           
           {/* Left Column: Editorial Headline & Actions */}
-          <div className="lg:col-span-7 flex flex-col justify-center space-y-5 sm:space-y-6 z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="lg:col-span-7 flex flex-col justify-center space-y-5 sm:space-y-6 z-10"
+          >
             
             {/* Two Separate Domain Cards */}
             <div className="flex flex-wrap items-center gap-3">
@@ -114,18 +120,24 @@ export default function Hero({ onOpenResume }: HeroProps) {
               </div>
             </div>
 
-          </div>
+          </motion.div>
 
           {/* Right Column: 3D Lateral Vertex Pivoting Cube */}
-          <div className="lg:col-span-5 relative flex items-center justify-center">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="lg:col-span-5 relative flex items-center justify-center"
+          >
             <div className="w-full max-w-[420px] lg:max-w-none">
               <HollowCube />
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </div>
     </section>
   );
 }
+
 

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { certificationsData, Certification } from "@/data/certifications";
 import CertificateModal from "./CertificateModal";
 import { Calendar, Eye } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Certifications() {
   const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
@@ -13,27 +14,37 @@ export default function Certifications() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4"
+        >
           <div>
             <div className="inline-flex items-center gap-2 mb-3">
               <span className="w-2 h-2 rounded-full bg-[#FF6B35]"></span>
-              <span className="text-xs font-mono text-[#F29B70] uppercase tracking-widest">CREDENTIALS</span>
+              <span className="text-xs font-mono text-[#F29B70] uppercase tracking-widest">CERTIFICATIONS</span>
             </div>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#F5EFE6] tracking-tight">
-              LICENSES &amp; CERTIFICATIONS
+              CERTIFICATIONS
             </h2>
           </div>
           <p className="text-sm font-sans text-[#A8A098] max-w-md leading-relaxed">
             Verified specialized credentials across data analytics, machine learning, and time series forecasting.
           </p>
-        </div>
+        </motion.div>
 
         {/* Certifications Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {certificationsData.map((cert) => (
-            <div
+          {certificationsData.map((cert, index) => (
+            <motion.div
               key={cert.id}
-              className="group relative p-7 sm:p-8 rounded-2xl bg-[#151412] border border-[#292521] hover:border-[#FF6B35]/70 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-[0_0_30px_rgba(255,107,53,0.14)]"
+              initial={{ opacity: 0, y: 25, scale: 0.98 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
+              className="group relative p-7 sm:p-8 rounded-2xl bg-[#151412] border border-[#292521] hover:border-[#FF6B35]/70 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-[0_0_30px_rgba(255,107,53,0.14)] hover:-translate-y-1"
             >
               {/* Subtle top-right glow */}
               <div className="absolute top-0 right-0 w-28 h-28 bg-[#FF6B35]/5 rounded-full blur-2xl group-hover:bg-[#FF6B35]/15 transition-colors pointer-events-none" />
@@ -92,7 +103,7 @@ export default function Certifications() {
                 </button>
               </div>
 
-            </div>
+            </motion.div>
           ))}
         </div>
 
@@ -103,4 +114,5 @@ export default function Certifications() {
     </section>
   );
 }
+
 

@@ -26,6 +26,8 @@ export default function BackgroundGlow() {
 
     // Particle field
     const particleCount = 45;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const particles: {
       x: number;
       y: number;
@@ -36,13 +38,15 @@ export default function BackgroundGlow() {
       fadeSpeed: number;
     }[] = [];
 
+    const speedMultiplier = prefersReducedMotion ? 0.05 : 1.4;
+
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
         size: Math.random() * 1.5 + 0.5,
-        speedX: (Math.random() - 0.5) * 0.2,
-        speedY: (Math.random() - 0.5) * 0.2,
+        speedX: (Math.random() - 0.5) * 0.32 * speedMultiplier,
+        speedY: (Math.random() - 0.5) * 0.32 * speedMultiplier,
         opacity: Math.random() * 0.5 + 0.1,
         fadeSpeed: (Math.random() * 0.005 + 0.002) * (Math.random() > 0.5 ? 1 : -1)
       });

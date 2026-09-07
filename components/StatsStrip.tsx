@@ -5,6 +5,7 @@ import { projectsData } from "@/data/projects";
 import { competitionsData } from "@/data/competitions";
 import { certificationsData } from "@/data/certifications";
 import { experiencesData } from "@/data/experience";
+import { getPublicRepoCount } from "@/lib/github";
 import { Code2, Trophy, Award, Briefcase } from "lucide-react";
 
 interface StatItemProps {
@@ -14,7 +15,7 @@ interface StatItemProps {
   label: string;
 }
 
-function StatCard({ icon, targetNumber, suffix = "+", label }: StatItemProps) {
+function StatCard({ icon, targetNumber, suffix = "", label }: StatItemProps) {
   const [count, setCount] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);
   const cardRef = useRef<HTMLDivElement | null>(null);
@@ -25,10 +26,10 @@ function StatCard({ icon, targetNumber, suffix = "+", label }: StatItemProps) {
         if (entry.isIntersecting && !hasAnimated) {
           setHasAnimated(true);
           let start = 0;
-          const duration = 1200;
-          const stepTime = 25;
+          const duration = 1000;
+          const stepTime = 30;
           const totalSteps = duration / stepTime;
-          const increment = targetNumber / totalSteps;
+          const increment = Math.max(1, targetNumber / totalSteps);
 
           const timer = setInterval(() => {
             start += increment;
@@ -63,9 +64,6 @@ function StatCard({ icon, targetNumber, suffix = "+", label }: StatItemProps) {
         <div className="p-2.5 rounded-xl bg-[#0B0B0A] border border-[#292521] text-[#FF6B35] group-hover:scale-110 group-hover:text-[#F29B70] transition-all duration-300">
           {icon}
         </div>
-        <span className="text-[11px] font-mono text-[#A8A098]/50 group-hover:text-[#FF6B35]/60 transition-colors">
-          LIVE METRIC
-        </span>
       </div>
 
       <div className="space-y-1 z-10">
@@ -82,30 +80,42 @@ function StatCard({ icon, targetNumber, suffix = "+", label }: StatItemProps) {
 }
 
 export default function StatsStrip() {
+  const [totalRepoCount, setTotalRepoCount] = useState<number>(0);
+
+  useEffect(() => {
+    async function fetchTotalRepoCount() {
+      const count = await getPublicRepoCount();
+      if (count > 0) {
+        setTotalRepoCount(count);
+      }
+    }
+    fetchTotalRepoCount();
+  }, []);
+
   const stats = [
     {
       icon: <Code2 className="w-5 h-5" />,
-      targetNumber: Math.max(projectsData.length, 6),
+      targetNumber: totalRepoCount,
       suffix: "+",
       label: "Projects"
     },
     {
       icon: <Trophy className="w-5 h-5" />,
-      targetNumber: Math.max(competitionsData.length, 2),
+      targetNumber: competitionsData.length,
       suffix: "",
-      label: "Competitions & Honors"
+      label: "Competitions"
     },
     {
       icon: <Award className="w-5 h-5" />,
-      targetNumber: Math.max(certificationsData.length, 3),
+      targetNumber: certificationsData.length,
       suffix: "",
       label: "Certifications"
     },
     {
       icon: <Briefcase className="w-5 h-5" />,
-      targetNumber: Math.max(experiencesData.length, 3),
+      targetNumber: experiencesData.length,
       suffix: "",
-      label: "Experiences / Roles"
+      label: "Experiences"
     }
   ];
 
@@ -125,3 +135,4 @@ export default function StatsStrip() {
     </section>
   );
 }
+

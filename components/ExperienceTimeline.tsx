@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { experiencesData, ExperienceItem } from "@/data/experience";
-import { Calendar, MapPin, CheckCircle2, Building, ChevronRight, Briefcase } from "lucide-react";
+import { experiencesData } from "@/data/experience";
+import { Calendar, MapPin, CheckCircle2, Building, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function ExperienceTimeline() {
   const [activeHoverId, setActiveHoverId] = useState<string | null>(experiencesData[0]?.id || null);
@@ -12,20 +13,26 @@ export default function ExperienceTimeline() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4"
+        >
           <div>
             <div className="inline-flex items-center gap-2 mb-3">
               <span className="w-2 h-2 rounded-full bg-[#FF6B35]"></span>
-              <span className="text-xs font-mono text-[#F29B70] uppercase tracking-widest">CAREER &amp; RESEARCH</span>
+              <span className="text-xs font-mono text-[#F29B70] uppercase tracking-widest">EXPERIENCE</span>
             </div>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#F5EFE6] tracking-tight">
               EXPERIENCE
             </h2>
           </div>
           <p className="text-sm font-sans text-[#A8A098] max-w-md leading-relaxed">
-            Computer vision research, automotive technology benchmarking, and fest leadership.
+            Computer vision research, automotive technology strategy, fest leadership, and cadet service.
           </p>
-        </div>
+        </motion.div>
 
         {/* LinkedIn-style Vertical Timeline */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -34,14 +41,24 @@ export default function ExperienceTimeline() {
           <div className="lg:col-span-5 space-y-4">
             <div className="relative pl-6 sm:pl-8 space-y-6">
               
-              {/* Vertical connecting line */}
-              <div className="absolute left-[11px] sm:left-[15px] top-4 bottom-4 w-[2px] bg-gradient-to-b from-[#FF6B35] via-[#FF6B35]/40 to-[#292521]" />
+              {/* Vertical connecting line with reveal animation */}
+              <motion.div 
+                initial={{ scaleY: 0 }}
+                whileInView={{ scaleY: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                className="absolute left-[11px] sm:left-[15px] top-4 bottom-4 w-[2px] bg-gradient-to-b from-[#FF6B35] via-[#FF6B35]/40 to-[#292521] origin-top"
+              />
 
-              {experiencesData.map((item) => {
+              {experiencesData.map((item, index) => {
                 const isActive = activeHoverId === item.id;
                 return (
-                  <div
+                  <motion.div
                     key={item.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-30px" }}
+                    transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
                     onMouseEnter={() => setActiveHoverId(item.id)}
                     onClick={() => setActiveHoverId(item.id)}
                     className={`relative p-5 rounded-2xl cursor-pointer transition-all duration-300 border ${
@@ -84,7 +101,7 @@ export default function ExperienceTimeline() {
                       <span>{isActive ? "Viewing details below ↓" : "Tap to view details"}</span>
                       <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isActive ? "rotate-90" : ""}`} />
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
@@ -95,9 +112,12 @@ export default function ExperienceTimeline() {
             {experiencesData.map((item) => {
               if (item.id !== activeHoverId) return null;
               return (
-                <div
+                <motion.div
                   key={item.id}
-                  className="p-7 sm:p-9 rounded-2xl bg-[#151412] border border-[#FF6B35]/60 shadow-[0_0_30px_rgba(255,107,53,0.12)] space-y-6 animate-in fade-in zoom-in-95 duration-200"
+                  initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  className="p-7 sm:p-9 rounded-2xl bg-[#151412] border border-[#FF6B35]/60 shadow-[0_0_30px_rgba(255,107,53,0.12)] space-y-6"
                 >
                   {/* Card Header */}
                   <div className="space-y-2 pb-5 border-b border-[#292521]">
@@ -157,7 +177,6 @@ export default function ExperienceTimeline() {
 
                   {/* Tech Tags */}
                   <div className="flex flex-wrap items-center gap-1.5 pt-4 border-t border-[#292521]/60">
-                    <span className="text-[11px] font-mono text-[#A8A098]/70 mr-1">DOMAINS:</span>
                     {item.skills.map((skill) => (
                       <span
                         key={skill}
@@ -167,7 +186,7 @@ export default function ExperienceTimeline() {
                       </span>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -177,4 +196,6 @@ export default function ExperienceTimeline() {
     </section>
   );
 }
+
+
 

@@ -19,13 +19,13 @@ export interface GitHubRepo {
 export async function getPublicRepositories(): Promise<GitHubRepo[]> {
   const username = "Khushi-Kumari030";
   try {
-    const res = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=20`, {
+    const res = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`, {
       method: "GET",
       headers: {
         Accept: "application/vnd.github.v3+json",
         "User-Agent": "KhushiKumari-Portfolio-Viewer",
       },
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      next: { revalidate: 3600 },
     });
 
     if (!res.ok) {
@@ -40,3 +40,32 @@ export async function getPublicRepositories(): Promise<GitHubRepo[]> {
     return [];
   }
 }
+
+export async function getPublicRepoCount(): Promise<number> {
+  const username = "Khushi-Kumari030";
+  try {
+    const res = await fetch(`https://api.github.com/users/${username}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/vnd.github.v3+json",
+        "User-Agent": "KhushiKumari-Portfolio-Viewer",
+      },
+      next: { revalidate: 3600 },
+    });
+
+    if (res.ok) {
+      const userData = await res.json();
+      if (typeof userData.public_repos === "number" && userData.public_repos > 0) {
+        return userData.public_repos;
+      }
+    }
+
+    // Fallback if user profile count is unavailable: fetch repos array directly
+    const repos = await getPublicRepositories();
+    return repos.length;
+  } catch (err) {
+    console.warn("Failed to fetch GitHub public repo count:", err);
+    return 0;
+  }
+}
+
